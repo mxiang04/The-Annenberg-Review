@@ -64,7 +64,7 @@ def index():
     return render_template("index.html", cash=cash, stocks=stocks, total=total)
 
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/upload", methods=["GET", "POST"])
 @login_required
 def upload():
     """Enable user to buy a stock."""
