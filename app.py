@@ -224,9 +224,9 @@ def register():
         return render_template("register.html")
 
 
-@app.route("/sell", methods=["GET", "POST"])
+@app.route("/profile", methods=["GET", "POST"])
 @login_required
-def sell():
+def profile():
     """Enable user to sell a stock."""
 
     # POST
