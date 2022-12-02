@@ -26,10 +26,6 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///finance.db")
 
-# Make sure API key is set
-if not os.environ.get("API_KEY"):
-    raise RuntimeError("API_KEY not set")
-
 
 @app.after_request
 def after_request(response):
@@ -46,7 +42,8 @@ def index():
     """Show portfolio of stocks"""
 
     # Query database for user's cash
-    rows = db.execute("SELECT cash FROM users WHERE id = :id", id=session["user_id"])
+    rows = db.execute("SELECT cash FROM users WHERE id = :id",
+                      id=session["user_id"])
     if not rows:
         return apology("missing user")
     cash = rows[0]["cash"]
@@ -95,7 +92,8 @@ def buy():
         cost = shares * quote["price"]
 
         # Get user's cash balance
-        rows = db.execute("SELECT cash FROM users WHERE id = :id", id=session["user_id"])
+        rows = db.execute(
+            "SELECT cash FROM users WHERE id = :id", id=session["user_id"])
         if not rows:
             return apology("missing user")
         cash = rows[0]["cash"]
