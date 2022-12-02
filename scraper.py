@@ -50,7 +50,9 @@ def scrape(meal):
     return categories
 
 
-meals = []
-for key, value in meal_matcher.items():
-    result = scrape(key)
-    meals.append(result)
+def get_menu():
+    meals = []
+    for key, value in meal_matcher.items():
+        result = scrape(key)
+        meals.append(result)
+    return meals
