@@ -66,7 +66,7 @@ def index():
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
-def buy():
+def upload():
     """Enable user to buy a stock."""
 
     # POST
@@ -117,7 +117,7 @@ def buy():
 
     # GET
     else:
-        return render_template("buy.html")
+        return render_template("upload.html")
 
 
 @app.route("/check", methods=["GET"])
