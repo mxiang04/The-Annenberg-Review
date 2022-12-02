@@ -8,7 +8,6 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 # Get time when running program
 now = datetime.datetime.now()
 date = now.strftime("%m-%d-%Y")
-current_hour = now.strftime("%H")
 
 meal_matcher = {
     "Breakfast": 0,
@@ -16,7 +15,7 @@ meal_matcher = {
     "Dinner": 2,
 }
 
-# Gets menu for specific day and time
+# Gets menu for specific day
 
 
 def scrape(meal):
