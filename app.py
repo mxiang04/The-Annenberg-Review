@@ -232,54 +232,20 @@ def profile():
     # POST
     if request.method == "POST":
 
-        # Validate form submission
-        if not request.form.get("symbol"):
-            return apology("missing symbol")
-        symbol = request.form.get("symbol").upper()
-        if not request.form.get("shares"):
-            return apology("missing shares")
-        elif not request.form.get("shares").isdigit():
-            return apology("invalid shares")
-        shares = int(request.form.get("shares"))
-        if shares < 1:
-            return apology("shares must be positive")
-
-        # Check how many shares user owes
-        rows = db.execute("""SELECT SUM(shares) AS shares FROM transactions
-            WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol""",
-                          user_id=session["user_id"], symbol=symbol)
-        if len(rows) != 1:
-            return apology("symbol not owned")
-        if shares > rows[0]["shares"]:
-            return apology("too many shares")
-
-        # Get stock quote
-        quote = lookup(request.form.get("symbol"))
-
-        # Record sale
-        db.execute("""INSERT INTO transactions (user_id, symbol, shares, price)
-            VALUES(:user_id, :symbol, :shares, :price)""",
-                   user_id=session["user_id"], symbol=quote["symbol"], shares=-shares, price=quote["price"])
-
-        # Deposit cash
-        db.execute("UPDATE users SET cash = cash + :value WHERE id = :id",
-                   value=shares * quote["price"], id=session["user_id"])
-
         # Display portfolio
-        flash("Sold!")
+        flash("Deleted!")
         return redirect("/")
 
     # GET
     else:
 
         # Get symbols owned
-        rows = db.execute("""SELECT symbol FROM transactions
-            WHERE user_id = :user_id GROUP BY symbol HAVING SUM(shares) > 0""",
-                          user_id=session["user_id"])
-        symbols = [row["symbol"] for row in rows]
-
+        username = db.execute(
+            "SELECT username FROM users WHERE id = ?", session["user_id"])[0]["username"]
+        posts = db.execute(
+            "SELECT 'likes', 'dislikes', 'time', 'input', 'rating' FROM POSTS WHERE 'name' = ?", username)
         # Display sales form
-        return render_template("profile.html", symbols=symbols)
+        return render_template("profile.html", posts=posts)
 
 
 def errorhandler(e):
