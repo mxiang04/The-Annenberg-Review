@@ -54,5 +54,4 @@ def get_menu():
     for key, value in meal_matcher.items():
         result = scrape(key)
         meals.append(result)
-        print(result)
     return meals
