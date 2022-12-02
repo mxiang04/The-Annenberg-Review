@@ -2,20 +2,23 @@
 main %}
 <form action="/upload" method="post">
   <div class="mb-3">
-    <input
+    <textarea>
       autocomplete="off"
       autofocus
       class="form-control mx-auto w-auto"
       name="review"
       placeholder="Review"
       type="text"
-    />
+      rows="4"
+      cols="50"
+    </textarea>
   </div>
   <div class="mb-3">
     <input
       autocomplete="off"
       class="form-control mx-auto w-auto"
       min="1"
+      max="5"
       name="rating"
       placeholder="Rating"
       type="number"
