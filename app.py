@@ -73,46 +73,19 @@ def upload():
     if request.method == "POST":
 
         # Validate form submission
-        if not request.form.get("symbol"):
-            return apology("missing symbol")
-        elif not request.form.get("shares"):
-            return apology("missing shares")
-        elif not request.form.get("shares").isdigit():
-            return apology("invalid shares")
-        shares = int(request.form.get("shares"))
-        if not shares:
-            return apology("too few shares")
+        if not request.form.get("review"):
+            return apology("missing review")
+        elif not request.form.get("rating"):
+            return apology("missing rating")
 
-        # Get stock quote
-        quote = lookup(request.form.get("symbol"))
-        if not quote:
-            return apology("invalid symbol")
+        username = db.execute(
+            "SELECT username FROM users WHERE id = ?", session["user_id"])[0]["username"]
 
-        # Cost to buy
-        cost = shares * quote["price"]
+        db.execute("INSERT INTO POSTS ('name', 'likes', 'dislikes', 'input', 'rating') \
+                    VALUES (?, ?, ?, ?, ?)", username, 0, 0, request.form.get("review"), int(request.form.get("rating")))
 
-        # Get user's cash balance
-        rows = db.execute(
-            "SELECT cash FROM users WHERE id = :id", id=session["user_id"])
-        if not rows:
-            return apology("missing user")
-        cash = rows[0]["cash"]
-
-        # Ensure user can afford
-        if cash < cost:
-            return apology("can't afford")
-
-        # Record purchase
-        db.execute("""INSERT INTO transactions (user_id, symbol, shares, price)
-            VALUES(:user_id, :symbol, :shares, :price)""",
-                   user_id=session["user_id"], symbol=quote["symbol"], shares=shares, price=quote["price"])
-
-        # Deduct cash
-        db.execute("UPDATE users SET cash = cash - :cost WHERE id = :id",
-                   cost=cost, id=session["user_id"])
-
-        # Display portfolio
-        flash("Bought!")
+        # Display Posts
+        flash("Submitted!")
         return redirect("/")
 
     # GET
