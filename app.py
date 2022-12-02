@@ -279,7 +279,7 @@ def profile():
         symbols = [row["symbol"] for row in rows]
 
         # Display sales form
-        return render_template("sell.html", symbols=symbols)
+        return render_template("profile.html", symbols=symbols)
 
 
 def errorhandler(e):
