@@ -1,16 +1,29 @@
 {% extends "layout.html" %} {% block title %} Profile {% endblock %} {% block
-main %} {% for likes, dislikes, time, input, rating in posts %}
-<form action="/profile" method="post">
-  <div class="mb-3">
-    <input
-      autocomplete="off"
-      class="form-control mx-auto w-auto"
-      min="0"
-      name="shares"
-      placeholder="Shares"
-      type="number"
-    />
-  </div>
-  <button class="btn btn-primary" type="submit">Delete</button>
-</form>
-{%endfor%} {% endblock %}
+main %}
+<h1>Your Reviews</h1>
+<h3>Your Average Rating: {{ average_score }}</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th class="text-start">Review</th>
+      <th class="text-end">Rating</th>
+      <th class="text-end">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for post in posts %}
+    <form action="/profile" method="post">
+      <tr>
+        <td class="text-start">{{ post["input"] }}</td>
+        <td class="text-end">{{ post["rating"] }}</td>
+        <td class="text-end">{{ post["time"] }}</td>
+        <input type="hidden" name="post_id" value={{ post["post_id"] }} />
+        <td class="text-end">
+          <button class="btn btn-primary" type="submit">Delete</button>
+        </td>
+      </tr>
+    </form>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

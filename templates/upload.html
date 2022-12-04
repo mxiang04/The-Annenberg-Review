@@ -2,26 +2,25 @@
 main %}
 <form action="/upload" method="post">
   <div class="mb-3">
+    <label>Write a Review!</label>
     <textarea
       autocomplete="off"
       autofocus
       class="form-control mx-auto w-auto"
       name="review"
-      placeholder="Review"
       type="text"
       rows="4"
       cols="50"
-    >
-    </textarea>
+    ></textarea>
   </div>
   <div class="mb-3">
     <select class="form-select mx-auto w-auto" name="rating">
       <option disabled selected>Rating</option>
       <option value="1" type="number">1</option>
-      <option value="1" type="number">2</option>
-      <option value="1" type="number">3</option>
-      <option value="1" type="number">4</option>
-      <option value="1" type="number">5</option>
+      <option value="2" type="number">2</option>
+      <option value="3" type="number">3</option>
+      <option value="4" type="number">4</option>
+      <option value="5" type="number">5</option>
     </select>
   </div>
   <button class="btn btn-primary" type="submit">Upload</button>

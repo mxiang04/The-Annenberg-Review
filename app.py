@@ -7,7 +7,8 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, usd, lookup
+from helpers import apology, login_required
+from scraper import get_menu
 
 # Configure application
 app = Flask(__name__)
@@ -15,8 +16,6 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Custom filter
-app.jinja_env.filters["usd"] = usd
 
 # Configure session
 app.config["SESSION_PERMANENT"] = False
@@ -36,38 +35,31 @@ def after_request(response):
     return response
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    """Show portfolio of stocks"""
+    """Show Menu"""
+    if request.method == "POST":
+        menu = request.form.get("menu")
 
-    # Query database for user's cash
-    rows = db.execute("SELECT cash FROM users WHERE id = :id",
-                      id=session["user_id"])
-    if not rows:
-        return apology("missing user")
-    cash = rows[0]["cash"]
-    total = cash
+        if menu == "Breakfast":
+            menu = get_menu()[0]
+        elif menu == "Lunch":
+            menu = get_menu()[1]
+        elif menu == "Dinner":
+            menu = get_menu()[2]
+        else:
+            return apology(400, "You did not select a menu.")
 
-    # Query database for user's stocks
-    stocks = db.execute("""SELECT symbol, SUM(shares) AS shares FROM transactions
-        WHERE user_id = :user_id GROUP BY symbol HAVING SUM(shares) > 0""", user_id=session["user_id"])
-
-    # Query Yahoo for stocks' latest names and prices
-    for stock in stocks:
-        quote = lookup(stock["symbol"])
-        stock["name"] = quote["name"]
-        stock["price"] = quote["price"]
-        total += stock["shares"] * quote["price"]
-
-    # Render portfolio
-    return render_template("index.html", cash=cash, stocks=stocks, total=total)
+        return render_template("selected.html", menu=menu)
+    else:
+        return render_template("index.html")
 
 
 @app.route("/upload", methods=["GET", "POST"])
 @login_required
 def upload():
-    """Enable user to buy a stock."""
+    """Upload a review to the database."""
 
     # POST
     if request.method == "POST":
@@ -81,12 +73,12 @@ def upload():
         username = db.execute(
             "SELECT username FROM users WHERE id = ?", session["user_id"])[0]["username"]
 
-        db.execute("INSERT INTO POSTS ('name', 'likes', 'dislikes', 'input', 'rating') \
-                    VALUES (?, ?, ?, ?, ?)", username, 0, 0, request.form.get("review"), int(request.form.get("rating")))
+        db.execute("INSERT INTO POSTS ('name', 'input', 'rating') \
+                    VALUES (?, ?, ?)", username, request.form.get("review"), int(request.form.get("rating")))
 
         # Display Posts
         flash("Submitted!")
-        return redirect("/")
+        return redirect("/profile")
 
     # GET
     else:
@@ -107,13 +99,14 @@ def check():
         return jsonify(True)
 
 
-@app.route("/history")
+@app.route("/feed")
 @login_required
-def history():
-    """Display user's history of transactions."""
-    transactions = db.execute(
-        "SELECT * FROM transactions WHERE user_id = :user_id", user_id=session["user_id"])
-    return render_template("history.html", transactions=transactions)
+def feed():
+    """Displays all the posts from the database."""
+    posts = db.execute("SELECT * FROM POSTS ORDER BY time DESC")
+    average_score = db.execute("SELECT AVG(rating) FROM POSTS")[
+        0]["AVG(rating)"]
+    return render_template("feed.html", posts=posts, average_score=average_score)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -164,31 +157,6 @@ def logout():
     return redirect("/login")
 
 
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get a stock quote."""
-
-    # POST
-    if request.method == "POST":
-
-        # Validate form submission
-        if not request.form.get("symbol"):
-            return apology("missing symbol")
-
-        # Get stock quote
-        quote = lookup(request.form.get("symbol"))
-        if not quote:
-            return apology("invalid symbol")
-
-        # Display quote
-        return render_template("quoted.html", quote=quote)
-
-    # GET
-    else:
-        return render_template("quote.html")
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user for an account."""
@@ -227,25 +195,31 @@ def register():
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    """Enable user to sell a stock."""
+    """Displays the reviews of the user logged in."""
 
     # POST
     if request.method == "POST":
 
         # Display portfolio
+        post_id = request.form.get("post_id")
+        db.execute("DELETE FROM POSTS WHERE post_id = ?", post_id)
         flash("Deleted!")
-        return redirect("/")
-
+        return redirect("/profile")
     # GET
     else:
 
         # Get symbols owned
         username = db.execute(
             "SELECT username FROM users WHERE id = ?", session["user_id"])[0]["username"]
+        # posts = db.execute(
+        #     "SELECT 'likes', 'dislikes', 'time', 'input', 'rating' FROM POSTS WHERE 'name' = ?", username)
         posts = db.execute(
-            "SELECT 'likes', 'dislikes', 'time', 'input', 'rating' FROM POSTS WHERE 'name' = ?", username)
+            "SELECT time, input, rating, post_id FROM POSTS WHERE name = ? ORDER BY time DESC", username)
+
+        average_score = db.execute(
+            "SELECT AVG(rating) FROM POSTS WHERE name = ?", username)[0]["AVG(rating)"]
         # Display sales form
-        return render_template("profile.html", posts=posts)
+        return render_template("profile.html", posts=posts, average_score=average_score)
 
 
 def errorhandler(e):

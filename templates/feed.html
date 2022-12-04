@@ -1,0 +1,25 @@
+{% extends "layout.html" %} {% block title %} Feed {% endblock %} {% block main
+%}
+<h1>Reviews from Everyone.</h1>
+<h3>Average Rating: {{ average_score }}</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th class="text-start">Review</th>
+      <th class="text-end">Rating</th>
+      <th class="text-end">Reviewer</th>
+      <th class="text-end">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for post in posts %}
+    <tr>
+      <td class="text-start">{{ post["input"] }}</td>
+      <td class="text-end">{{ post["rating"] }}</td>
+      <td class="text-end">{{ post["name"] }}</td>
+      <td class="text-end">{{ post["time"] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

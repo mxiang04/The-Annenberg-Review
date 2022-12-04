@@ -11,4 +11,21 @@ main %}
   </div>
   <button class="btn btn-primary" type="submit">Select Menu!</button>
 </form>
+<table class="table tablestriped">
+  <thead>
+    <tr>
+      <th class="text-start">Category</th>
+      <th class="text-end">Name of Dish</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for category, items in menu.items() %} {% for item in items %}
+    <tr>
+      <td class="text-start" style="font-weight: 600">{{ category }}</td>
+      <td class="text-end">{{item}}</td>
+    </tr>
+
+    {% endfor %} {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
