@@ -2,9 +2,10 @@ import datetime
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from cs50 import SQL
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
-
+db = SQL("sqlite:///blog.db")
 # Get time when running program
 now = datetime.datetime.now()
 date = now.strftime("%m-%d-%Y")
@@ -46,12 +47,19 @@ def scrape(meal):
         except:
             pass
 
-    return categories
+    for category, items in categories.items():
+        for item in items:
+            db.execute(
+                "INSERT INTO FOOD (category, name, meal) VALUES (?, ?, ?)", category, item, meal)
 
 
-def get_menu():
-    meals = []
-    for key, value in meal_matcher.items():
-        result = scrape(key)
-        meals.append(result)
-    return meals
+def get_menu(meal):
+    cur_date = now.strftime("%Y-%m-%d")
+    rows = db.execute("SELECT * FROM FOOD WHERE date = ?", cur_date)
+    if len(rows) == 0:
+        for key, value in meal_matcher.items():
+            scrape(key)
+
+    data = db.execute(
+        "SELECT category, name FROM FOOD WHERE meal = ? AND date = ?", meal, cur_date)
+    return data

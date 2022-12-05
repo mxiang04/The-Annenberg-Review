@@ -19,13 +19,13 @@ main %}
     </tr>
   </thead>
   <tbody>
-    {% for category, items in menu.items() %} {% for item in items %}
+    {% for dish in menu %}
     <tr>
-      <td class="text-start" style="font-weight: 600">{{ category }}</td>
-      <td class="text-end">{{item}}</td>
+      <td class="text-start" style="font-weight: 600">{{ dish.category }}</td>
+      <td class="text-end">{{dish.name}}</td>
     </tr>
 
-    {% endfor %} {% endfor %}
+    {% endfor %}
   </tbody>
 </table>
 {% endblock %}

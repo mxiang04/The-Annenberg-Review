@@ -41,15 +41,7 @@ def index():
     """Show Menu"""
     if request.method == "POST":
         menu = request.form.get("menu")
-
-        if menu == "Breakfast":
-            menu = get_menu()[0]
-        elif menu == "Lunch":
-            menu = get_menu()[1]
-        elif menu == "Dinner":
-            menu = get_menu()[2]
-        else:
-            return apology(400, "You did not select a menu.")
+        menu = get_menu(menu)
 
         return render_template("selected.html", menu=menu)
     else:
@@ -104,7 +96,7 @@ def check():
 def feed():
     """Displays all the posts from the database."""
     posts = db.execute("SELECT * FROM POSTS ORDER BY time DESC")
-    average_score = db.execute("SELECT AVG(rating) FROM POSTS")[
+    average_score = db.execute("SELECT AVG(rating) FROM POSTS WHERE time >= CURRENT_DATE")[
         0]["AVG(rating)"]
     return render_template("feed.html", posts=posts, average_score=average_score)
 
