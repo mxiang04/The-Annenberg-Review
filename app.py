@@ -96,6 +96,7 @@ def check():
 def feed():
     """Displays all the posts from the database."""
     posts = db.execute("SELECT * FROM POSTS ORDER BY time DESC")
+    # Gets the average score for today
     average_score = db.execute("SELECT AVG(rating) FROM POSTS WHERE time >= CURRENT_DATE")[
         0]["AVG(rating)"]
     return render_template("feed.html", posts=posts, average_score=average_score)
@@ -192,7 +193,7 @@ def profile():
     # POST
     if request.method == "POST":
 
-        # Display portfolio
+        # Deletes the specified post the user's profile
         post_id = request.form.get("post_id")
         db.execute("DELETE FROM POSTS WHERE post_id = ?", post_id)
         flash("Deleted!")
@@ -200,11 +201,9 @@ def profile():
     # GET
     else:
 
-        # Get symbols owned
+        # Get posts from user
         username = db.execute(
             "SELECT username FROM users WHERE id = ?", session["user_id"])[0]["username"]
-        # posts = db.execute(
-        #     "SELECT 'likes', 'dislikes', 'time', 'input', 'rating' FROM POSTS WHERE 'name' = ?", username)
         posts = db.execute(
             "SELECT time, input, rating, post_id FROM POSTS WHERE name = ? ORDER BY time DESC", username)
 

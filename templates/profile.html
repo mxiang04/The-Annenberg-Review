@@ -2,7 +2,7 @@
 main %}
 <h1>Your Reviews</h1>
 <h3>Your Average Rating: {{ average_score }}</h3>
-<table class="table">
+<table class="table" style="table-layout: fixed; width: 100%">
   <thead>
     <tr>
       <th class="text-start">Review</th>
@@ -14,7 +14,9 @@ main %}
     {% for post in posts %}
     <form action="/profile" method="post">
       <tr>
-        <td class="text-start">{{ post["input"] }}</td>
+        <td class="text-start" style="word-wrap: break-word">
+          {{ post["input"] }}
+        </td>
         <td class="text-end">{{ post["rating"] }}</td>
         <td class="text-end">{{ post["time"] }}</td>
         <input type="hidden" name="post_id" value={{ post["post_id"] }} />
