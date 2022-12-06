@@ -1,5 +1,15 @@
 {% extends "layout.html" %} {% block title %} Portfolio {% endblock %} {% block
 main %}
+<div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+  <div class="offcanvas-header">
+  <h5 class="offcanvas-title" id="offcanvasLabel">Welcome!</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      Here's how Annenberg Reviews works! First, you find a food you'd like to review. Then you you rate the food on a scale from 1-5. Lastly, you can leave any comments about the food item with feedback no your experience. Click anywhere when you are done reading this!
+  </div>
+</div>
+
 <form action="/" method="post">
   <div class="mb-3">
     <select class="form-select mx-auto w-auto" name="menu">

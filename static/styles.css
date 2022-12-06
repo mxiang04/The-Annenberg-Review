@@ -5,19 +5,50 @@ nav .navbar-brand
 }
 
 /* Colors for brand */
-nav .navbar-brand .blue
-{
-    color: #537fbe;
-}
 nav .navbar-brand .red
 {
-    color: #ea433b;
+    color: red;
+    font-family: 'Brush Script MT', cursive;
+    font-size: 50px;
 }
-nav .navbar-brand .yellow
+
+#upload, #profile, #feed, #logout, #register, #login
 {
-    color: #f5b82e;
+    color: black;
+    font-family: 'Impact';
+    font-weight: bold;
 }
-nav .navbar-brand .green
+
+h1, h3
 {
-    color: #2e944b;
+    color: white;
+    font-style: italic;
+}
+
+h2 
+{
+    color: white;
+    font-size: 50px;
+    font-style: bold;
+    font-family: 'Brush Script MT', cursive;
+}
+
+body
+{
+    background-color: crimson;
+}
+
+th
+{
+    color: white;
+}
+
+tr:hover
+{
+    background-color: #D6EEEE;
+}
+
+ins
+{
+    color: black;
 }

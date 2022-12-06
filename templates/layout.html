@@ -27,12 +27,10 @@
   </head>
 
   <body>
-    <nav class="bg-light border navbar navbar-expand-md navbar-light">
+    <nav class="bg-warning border navbar navbar-expand-md navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="/"
-          ><span class="blue">Annenburg</span><span class="red">$</span
-          ><span class="yellow"></span><span class="green">0</span>
-          <span class="red">Review</span></a
+          ><span class="red">Annenburg Reviews</span></a
         >
         <button
           aria-controls="navbar"
@@ -47,27 +45,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar">
           {% if session["user_id"] %}
-          <ul class="navbar-nav me-auto mt-2"
+          <ul class="navbar-nav me-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" href="/upload">Upload Post</a>
+              <a class="nav-link" id="upload" href="/upload">Upload Post</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="/profile">Your Profile</a></li>
             <li class="nav-item">
-              <a class="nav-link" href="/feed">Feed</a>
+              <a class="nav-link" id="profile" href="/profile">Your Profile</a></li>
+            <li class="nav-item">
+              <a class="nav-link" id="feed" href="/feed">Feed</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" href="/logout">Log Out</a>
+              <a class="nav-link" id="logout" href="/logout">Log Out</a>
             </li>
           </ul>
           {% else %}
           <ul class="navbar-nav ms-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" href="/register">Register</a>
+              <a class="nav-link" id="register" href="/register">Register</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/login">Log In</a>
+              <a class="nav-link" id="login" href="/login">Log In</a>
             </li>
           </ul>
           {% endif %}
@@ -88,7 +87,7 @@
     </main>
 
     <footer class="mb-5 small text-center text-muted">
-      The Annenburg Review.
+      <ins>The Annenburg Review.</ins>
     </footer>
   </body>
 </html>
