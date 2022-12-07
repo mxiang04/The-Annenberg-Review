@@ -54,12 +54,11 @@ def scrape(meal):
 
 
 def get_menu(meal):
-    cur_date = now.strftime("%Y-%m-%d")
-    rows = db.execute("SELECT * FROM FOOD WHERE date = ?", cur_date)
+    rows = db.execute("SELECT * FROM FOOD WHERE date = CURRENT_DATE")
     if len(rows) == 0:
         for key, value in meal_matcher.items():
             scrape(key)
 
     data = db.execute(
-        "SELECT category, name FROM FOOD WHERE meal = ? AND date = ?", meal, cur_date)
+        "SELECT category, name FROM FOOD WHERE meal = ? AND date = CURRENT_DATE", meal)
     return data
