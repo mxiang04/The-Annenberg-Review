@@ -1,4 +1,4 @@
-## CS50 Final - The Annenberg Review
+# CS50 Final - The Annenberg Review
 # Installation
 
     Install chromedriver - https://chromedriver.storage.googleapis.com/index.html?path=108.0.5359.71/
